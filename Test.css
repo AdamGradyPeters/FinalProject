@@ -1,0 +1,53 @@
+#lamp {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -73px;
+	transform-origin: 50% 0%;
+}
+
+#fallenLamp {
+	position:absolute;
+	margin-left: 34%;
+    margin-right: auto;
+    margin-top:15%;
+}
+
+#beginWordArtBlack {
+	position:fixed;
+	top: 40%;
+	left: 36%;
+}
+
+#beginWordArtRed {
+	position:fixed;
+	top: 40%;
+	left: 36%;
+}
+
+#words {
+	margin-left: auto;
+	margin-right: auto; 
+}
+
+#buttons {
+	margin-left: 44%;
+}
+
+#textBoxes {
+	margin-left: 41%;
+}
+
+#FinalWords {
+	margin-left: 10%;
+}
+
+
+
+
+
+
+
+
+
+

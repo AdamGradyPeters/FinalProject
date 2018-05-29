@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+ 
+<head>
+	<meta charset="utf-8" >
+    <title>CSC500 at Phillips Academy</title>
+
+    <link rel="stylesheet" type="text/css" href="Test.css" />
+
+    <meta name="description" content="A sample HTML/CSS example website to demonstrate to students what they can build"/>
+    <meta name="keywords" content="HTML/CSS, web development, webdev, example website, students" />
+    <meta name="robots" content="index,follow" />
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> <!-- import jQuery -->
+ 
+ 	<style>
+ 		body {
+ 			padding: 30px;
+ 		}
+ 	</style>
+</head>
+ 
+<body>
+	<audio id="bulbFlicker"> <!-- Add bulbFlicker mp3 -->
+	 	<source src="LightBulbFlicker.mp3" type="audio/mpeg">
+	</audio><!-- Add lampFalling mp3 -->
+	<audio id="lampFalling">
+	 	<source src="lampCrashing.mp3" type="audio/mpeg">
+	</audio>
+
+	<script>
+		var i = true; //used to make sure that the black 'begin' does no appear as the red begin is fading.
+
+		$(document).ready(function(){ //if the 'begin' is clicked, fade the 'begin'
+		    $("#beginWordArtRed").click(function() {
+		        $("#beginWordArtRed").fadeOut(1900);
+		    	i = false; //make sure that the black begin does not appear
+		    });
+		});
+
+		function hideOrShow(elem) { //heavily utulized in this program. This function makes an element disappear if it exists, and appear if it does not
+	    	var x = document.getElementById(elem);
+	    	if (x.style.display === "none" && i) {
+	        	x.style.display = "block";
+	    	} 
+	    	else{
+	        	x.style.display = "none";
+			}
+		}
+
+		$(document).ready(function(){ //If hovering over black 'begin', show red
+		    $("#beginWordArtBlack").hover(function(){
+		        	hideOrShow("beginWordArtBlack");
+		        }, function(){
+		    });
+		});
+
+		$(document).ready(function(){ //If you stop hovering over the red 'begin', reshow the black 'begin'
+		    $("#beginWordArtRed").hover(function() {
+	        }, function(){
+	        	hideOrShow("beginWordArtBlack");
+	   		});
+		});
+
+		var looper; //this variable makes it so that you can stop the animation if you so please
+		var degrees = 44; 
+		function rotateAnimation(el, speed, asdf, rotateTo, incOrDec) {
+			var elem = document.getElementById(el); //get the element that we are rotating
+			var sp2 = asdf + degrees;
+			//get the browswer and act accordingly
+			if(navigator.userAgent.match("Chrome")) {
+				elem.style.WebkitTransform = "rotate("+ sp2 +"deg)";
+			} 
+			else if(navigator.userAgent.match("Firefox")) {
+				elem.style.MozTransform = "rotate(" + sp2 +"deg)";
+			} 
+			else if(navigator.userAgent.match("MSIE")) {
+				elem.style.msTransform = "rotate("+ sp2 +"deg)";
+			} 
+			else if(navigator.userAgent.match("Opera")) {
+				elem.style.OTransform = "rotate("+ sp2 +"deg)";
+			} 
+			else {
+				elem.style.transform = "rotate("+ sp2 +"deg)";
+			}
+
+			degrees += incOrDec; //rotate left or right depending on the following conditions by one frame
+			if(incOrDec == -1)
+			{
+				if (degrees == 0)
+					degrees = 360;
+				if(degrees < rotateTo) //while falling, increase the speed (a decreased 'speeed' variable increases the speed of rotation)
+					speed -= .85;
+				else
+					speed += .85; //while rising, decrease the speed
+			}
+
+			else if(incOrDec == 1)
+			{
+				if (degrees == 360)
+					degrees = 1;
+				if(degrees > 360-rotateTo)
+					speed -=.85; //while falling, increase the speed
+				else
+					speed += .85;  //while rising, decrease the speed
+			}
+
+			if(degrees == rotateTo) //if you hit the maximum height on the left, fall back down
+				incOrDec = -1;
+			else if(degrees == 360 - rotateTo) //if you hit the minimum height on the right, fall back down
+				incOrDec = 1;
+			looper = setTimeout('rotateAnimation(\'' + el + '\',' + speed + ',\'' + asdf + '\',' + rotateTo + ',' + incOrDec + ')',speed); //recurse
+
+		}
+		//start flickering, then press start to play, and it fades to black	
+
+		function startGame() {//initiate the game
+			killLight(); //make flicker noise
+			setTimeout(flickerLight, 1900); // make flicker animation
+		}
+
+		function flickerLight() { //change backround and hide/show light in order to mimick a flickering light. Times are meant to match the flicker light mp3
+			i = true;
+	  		setTimeout(function() {
+				hideOrShow("lamp");
+ 				document.body.style.backgroundColor = "black";
+ 				setTimeout(function() {
+ 					document.body.style.backgroundColor = "white";
+ 					hideOrShow("lamp");
+ 					setTimeout(function() {
+ 						document.body.style.backgroundColor = "black";
+ 						hideOrShow("lamp");
+ 						setTimeout(function() {
+ 							hideOrShow("lamp");
+ 							document.body.style.backgroundColor = "white";
+ 							setTimeout(function() {
+ 								hideOrShow("lamp");
+ 								document.body.style.backgroundColor = "black";
+ 								setTimeout(function() { level1(); }, 2000); //initate the first lvel
+ 							}, 180);
+ 						}, 200);
+ 					}, 400);
+ 				}, 300);
+ 			}, 10);
+		}
+
+	var x = document.getElementById("bulbFlicker"); //play bulb flickering sound
+    function killLight() 
+    {
+    	x.play();
+    }
+    var y = document.getElementById("lampFalling"); //play lamp falling sound
+	function dropLamp()
+	{
+		y.play();
+	}
+
+	function removeButton() {
+	    var elem = document.getElementById('firstButton');
+	    elem.parentNode.removeChild(elem);
+	    return false;
+		}
+	</script>
+
+ 	<script>
+		function flickerFallenLamp(){ //fade in and out the fallen lamp in order to mimick it partially flickering
+		    $("#fallenLamp").fadeTo(250, .65);
+		    $("#fallenLamp").fadeTo(250, 1);
+		    $("#fallenLamp").fadeTo(250, .65);
+		    $("#fallenLamp").fadeTo(250, 1);
+		    $("#fallenLamp").fadeTo(500, .65);
+		    $("#fallenLamp").fadeTo(500, 1);   	
+		    flickerFallenLamp(); //recurse so that the animation continues to occur
+		}
+	
+		function level1() {
+			dropLamp(); //play the dropping lamp sound
+			//load all of the elements of level 1
+			setTimeout(function() { hideOrShow("Riddle1Part1") }, 1000);
+			setTimeout(function() { hideOrShow("Riddle1Part2") }, 1000);
+			setTimeout(function() { hideOrShow("fallenLamp"); }, 1000);
+			setTimeout(function() { flickerFallenLamp(); }, 1000);
+			setTimeout(function() { hideOrShow("userInput1"); }, 1000);
+			setTimeout(function() { hideOrShow("button1"); }, 1000);
+		}
+
+		function level2() {
+			//load all of the elements of level 2
+			//remove all elements of level 1
+			hideOrShow("Riddle1Part1");
+			hideOrShow("Riddle1Part2");
+			hideOrShow("Riddle2Part1");
+			hideOrShow("Riddle2Part2");
+			hideOrShow("userInput2");
+			hideOrShow("userInput1");
+			hideOrShow("button1");
+			hideOrShow("button2");
+		}
+
+		function level3() {
+			//load all of the elements of level 3
+			//remove all elements of level 2
+			hideOrShow("Riddle2Part1");
+			hideOrShow("Riddle2Part2");
+			hideOrShow("Riddle3Part1");
+			hideOrShow("Riddle3Part2");
+			hideOrShow("userInput2");
+			hideOrShow("userInput3");
+			hideOrShow("button2");
+			hideOrShow("button3");
+		}
+
+		function level4() {
+			//load all of the elements of level 4
+			//remove all elements of level 3
+			hideOrShow("Riddle3Part1");
+			hideOrShow("Riddle3Part2");
+			hideOrShow("userInput3");
+			hideOrShow("button3");
+			hideOrShow("FinalWords")
+			hideOrShow("button4");
+			hideOrShow("userInput4");
+		}
+
+
+		function test1() { //if the user enters mirror (or any phrase that includes mirror, so that answers such as 'a mirror' work) then display correct and move to level 2, else display incorrect and continue on this level
+            var userInput = document.getElementById("userInput1").value;
+            if (userInput.includes("mirror") || userInput.includes("Mirror"))
+            {
+            	alert("CORRECT");
+            	level2();
+            }
+            else {
+            	alert("INCORRECT");
+            }
+        }
+
+        function test2() {//if the user enters 'echo' then display correct and move to level 3, else display incorrect and continue on this level
+
+			var userInput1 = document.getElementById("userInput2").value;
+	            if (userInput1.includes("echo") || userInput1.includes("Echo"))
+	            {
+	            	alert("CORRECT");
+	            	level3();
+	            }
+	            else {
+	            	alert("INCORRECT");
+	            }
+		}
+
+		function test3() { //if the user enters 'reflection' then display correct and move to level 4, else display incorrect and continue on this level
+			var userInput3 = document.getElementById("userInput3").value;
+            if (userInput3.includes("reflection") || userInput1.includes("Reflection"))
+            {
+            	alert("CORRECT");
+            	level4();
+            }
+            else {
+            	alert("INCORRECT");
+            }
+		}	
+
+		function test4() {// ahhhh yes, the final puzzle, an accumulation of all 3. If they answer 'me', they win, display message, and refresh page so that they can restart. If they get it wrong, display incorrect and continue on level. 
+			var userInput4 = document.getElementById("userInput4").value;
+            if (userInput4.includes("me") || userInput4.includes("Me"))
+            {
+            	alert("YOU WIN \n\nBUT IN REALITY, I AM NOT YOU.\nYOU ARE ME");
+            	location.reload();
+            }
+            else {
+            	alert("INCORRECT");
+            }
+		}     
+	</script>
+
+	<div id="words">  <!-- load word art files -->
+		<img id="Riddle1Part1" src="Riddle1Part1.png">
+		<img id="Riddle1Part2" src="Riddle1Part2.png">
+		<img id="Riddle2Part1" src="Riddle2Part1.png">
+		<img id="Riddle2Part2" src="Riddle2Part2.png">
+		<img id="Riddle3Part1" src="Riddle3Part1.png">
+		<img id="Riddle3Part2" src="Riddle3Part2.png">
+		<img id="FinalWords" src="FinalWords.png">
+	</div>
+
+	<div id="textBoxes"> <!-- load the text boxes where they enter answers -->
+		<input type="text" id="userInput1"></input>
+	    <input type="text" id="userInput2"></input>
+	    <input type="text" id="userInput3"></input>
+	    <input type="text" id="userInput4"></input>
+	</div>
+	<div id="buttons"> <!-- load the buttons that allow the user to submit answers -->
+		<button id="button1" onclick="test1()">You sure?</button>
+		<button id="button2" onclick="test2()">You sure?</button>
+		<button id="button3" onclick="test3()">You sure?</button>
+		<button id="button4" onclick="test4()">You sure?</button>
+	</div>
+
+   <!--  load images on the starting screen -->
+	<img id="lamp" src="Hanging-Lamps-PNG.png"></img>
+	<img id="beginWordArtRed" src="beginRed.png" onclick="startGame()">
+	<img id="beginWordArtBlack" src="begin.png" onclick="startGame()">
+	<img id="fallenLamp" src="notHangingLamp.png">
+
+	<script> rotateAnimation("lamp",50, "", 45, 1); </script> <!-- initate the rotation of the lamp -->
+	<script>
+		//hide all elements that do not belong on the opening page
+		hideOrShow("fallenLamp"); 
+		hideOrShow("Riddle1Part1");
+		hideOrShow("Riddle1Part2");
+		hideOrShow("Riddle2Part1");
+		hideOrShow("Riddle2Part2");
+		hideOrShow("Riddle3Part1");
+		hideOrShow("Riddle3Part2");
+		hideOrShow("FinalWords")
+		hideOrShow("userInput1");
+		hideOrShow("userInput2");
+		hideOrShow("userInput3");
+		hideOrShow("userInput4");
+		hideOrShow("button1");
+		hideOrShow("button2");
+		hideOrShow("button3");
+		hideOrShow("button4")
+	</script>  
+</body>
+ 
+</html>
